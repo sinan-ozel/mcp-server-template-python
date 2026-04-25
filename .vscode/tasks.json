@@ -60,7 +60,7 @@
     {
       "label": "inspector",
       "type": "shell",
-      "command": "docker compose -f ${workspaceFolder}/inspector/docker-compose.yaml up --build",
+      "command": "docker rm -f mcp-server mcp-inspector 2>/dev/null || true && docker compose -f ${workspaceFolder}/inspector/docker-compose.yaml down --remove-orphans && docker compose -f ${workspaceFolder}/inspector/docker-compose.yaml up --build",
       "problemMatcher": [],
       "isBackground": true,
       "group": "none",

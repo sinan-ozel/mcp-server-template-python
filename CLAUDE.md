@@ -28,6 +28,8 @@ Server code lives in `server/`. All tooling (reformat, lint, test Dockerfiles) r
 ### MCP transport
 FastMCP with `transport="streamable-http"`. Endpoint at `/mcp` (POST). Port 8000. This is the current MCP standard — prefer it over the older SSE transport.
 
+Always use Pydantic BaseModels with detailed Field descriptions when writing tools.
+
 ## Directory Structure
 
 ```
@@ -81,16 +83,61 @@ The old `.github/ci.yaml` is superseded by `.github/workflows/ci.yaml`. The old 
 
 ## Adding Tools
 
-Edit `server/main.py`:
+Edit `server/main.py`. Always use Pydantic BaseModels with `Field` descriptions for input validation:
 
 ```python
+from pydantic import BaseModel, Field
+
+class MyToolInput(BaseModel):
+    """Input model for my_tool."""
+    param: str = Field(description="Description of the parameter")
+
 @mcp.tool()
-def my_tool(param: str) -> str:
+def my_tool(input: MyToolInput) -> str:
     """What this tool does (shown in MCP clients)."""
-    return f"result: {param}"
+    return f"result: {input.param}"
 ```
 
 Run `inspector` task to test in the browser UI, or `test` task to run the automated suite.
+
+## JSON Schema Conventions
+
+When defining tool input schemas with Pydantic, follow these rules:
+
+### No null values allowed
+By default, JSON Schema allows `null` for any type. To explicitly reject null values, use `json_schema_extra` to add the `not: {type: null}` constraint:
+
+```python
+from pydantic import BaseModel, Field
+
+class GetCapitalInput(BaseModel):
+    """Input model for get_capital tool."""
+
+    nation: str = Field(
+        json_schema_extra={
+            "type": "string",
+            "not": {"type": "null"},
+            "description": "The name of the Eberron nation."
+        }
+    )
+```
+
+This generates:
+```json
+{
+  "type": "object",
+  "properties": {
+    "nation": {
+      "type": "string",
+      "not": {"type": "null"},
+      "description": "The name of the Eberron nation."
+    }
+  },
+  "required": ["nation"]
+}
+```
+
+**Why this matters**: Per JSON-RPC 2.0 spec, `params: null` is an **Invalid Request** (`-32600`), while missing required params or wrong types is **Invalid Params** (`-32602`). Without the `not: {type: null}` constraint, null values may be accepted and validated differently than intended.
 
 ## Testing
 

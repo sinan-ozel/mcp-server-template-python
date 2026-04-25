@@ -20,6 +20,7 @@ services:
   mcp-inspector:
     image: ghcr.io/modelcontextprotocol/inspector:latest
     container_name: mcp-inspector
+    entrypoint: ["node", "/app/client/bin/start.js", "--transport", "streamable-http", "--server-url", "http://mcp-server:8000/mcp"]
     ports:
       - "127.0.0.1:6274:6274"
       - "127.0.0.1:6277:6277"
@@ -33,7 +34,6 @@ services:
     environment:
       - HOST=0.0.0.0
       - ALLOWED_ORIGINS=http://127.0.0.1:6274,http://localhost:6274
-      - MCP_SERVER_URL=http://mcp-server:8000/mcp
       - DANGEROUSLY_OMIT_AUTH=true
 
 networks:
