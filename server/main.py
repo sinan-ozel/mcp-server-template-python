@@ -1,7 +1,16 @@
+import logging
+
 from fastmcp import FastMCP
 
 mcp = FastMCP("<SERVER-NAME>")
 
+
+class _SuppressMCPUnionValidation(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        return not record.getMessage().startswith("Failed to validate request:")
+
+
+logging.getLogger().addFilter(_SuppressMCPUnionValidation())
 
 @mcp.tool()
 def hello(name: str) -> str:
