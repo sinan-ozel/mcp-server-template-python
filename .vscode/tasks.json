@@ -58,6 +58,16 @@
       }
     },
     {
+      "label": "create-gh-pages",
+      "type": "shell",
+      "command": "bash ${workspaceFolder}/scripts/create_gh_pages.sh",
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },    {
       "label": "inspector",
       "type": "shell",
       "command": "docker rm -f mcp-server mcp-inspector 2>/dev/null || true && docker compose -f ${workspaceFolder}/inspector/docker-compose.yaml down --remove-orphans && docker compose -f ${workspaceFolder}/inspector/docker-compose.yaml up --build",
