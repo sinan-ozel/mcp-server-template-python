@@ -1,5 +1,6 @@
 ![CI/CD](https://github.com/<ORGANIZATION>/<SERVER-NAME>/actions/workflows/ci.yaml/badge.svg?branch=main)
 ![Docker Hub](https://img.shields.io/docker/v/<ORGANIZATION>/<SERVER-NAME>?label=Docker%20Hub)
+[![Docker Pulls <SERVER-NAME>](https://img.shields.io/docker/pulls/<ORGANIZATION>/<SERVER-NAME>?label=docker%20pulls%20<SERVER-NAME>)](https://hub.docker.com/r/<ORGANIZATION>/<SERVER-NAME>)
 ![License](https://img.shields.io/github/license/<ORGANIZATION>/<SERVER-NAME>.svg)
 
 # MCP Server Template
